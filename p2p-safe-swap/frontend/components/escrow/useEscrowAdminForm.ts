@@ -11,7 +11,7 @@ export interface UseEscrowAdminFormOptions {
 }
 
 export function useEscrowAdminForm({ escrow, onSubmit }: UseEscrowAdminFormOptions) {
-  const isFunded = escrow.status === "funded";
+  const isFunded = escrow.status !== "unfunded";
 
   const [amount, setAmount] = useState(escrow.amount);
   const [platformFee, setPlatformFee] = useState(escrow.platformFee);

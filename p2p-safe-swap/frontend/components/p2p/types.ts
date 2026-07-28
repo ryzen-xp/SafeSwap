@@ -34,4 +34,8 @@ export interface P2POrder {
   trustline?: { address: string; symbol: string };
   /** Populated after the seller accepts and the escrow is deployed on-chain. */
   escrowContractId?: string;
+  /** Lifecycle state once an accepted order is backed by an escrow. */
+  status?: "open" | "escrowed" | "disputed" | "resolved";
+  /** Confirmed payout split recorded after a dispute resolution succeeds. */
+  finalDistributions?: Array<{ address: string; amount: string }>;
 }

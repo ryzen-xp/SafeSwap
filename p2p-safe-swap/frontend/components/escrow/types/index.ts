@@ -1,4 +1,9 @@
-export type EscrowStatus = "unfunded" | "funded";
+export type EscrowStatus = "unfunded" | "funded" | "disputed" | "resolved";
+
+export interface EscrowDistribution {
+  address: string;
+  amount: string;
+}
 
 export interface EscrowRoles {
   approver: string;
@@ -23,6 +28,7 @@ export interface Escrow {
   platformFee: number;
   roles: EscrowRoles;
   milestones: EscrowMilestone[];
+  finalDistributions?: EscrowDistribution[];
 }
 
 export interface EscrowAdminUpdateFormProps {

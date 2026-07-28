@@ -1,12 +1,9 @@
-"use client";
-
-import { use } from "react";
-import { EscrowAdminUpdateForm } from "@/frontend/components/escrow/EscrowAdminUpdateForm";
+import { EscrowModeratorPage } from "@/frontend/components/escrow/EscrowModeratorPage";
 import type { Escrow } from "@/frontend/components/escrow/types";
 
 const MOCK_ESCROW: Escrow = {
   contractId: "esc-diego-v",
-  status: "unfunded",
+  status: "disputed",
   amount: 1500,
   currency: "USDC",
   platformFee: 1.5,
@@ -14,7 +11,7 @@ const MOCK_ESCROW: Escrow = {
     approver: "GABC3DEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQR",
     serviceProvider: "GXYZ3ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNO",
     releaseSigner: "GLMN3OPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ012",
-    disputeResolver: "GOPQ3RSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
+    disputeResolver: "",
     receiver: "GRST3UVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567",
     platformAddress: "GUVW3XYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789A",
   },
@@ -24,25 +21,26 @@ const MOCK_ESCROW: Escrow = {
   ],
 };
 
-const MOCK_IS_ADMIN = true;
-
 interface EscrowAdminPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default function EscrowAdminPage({ params }: EscrowAdminPageProps) {
-  const { id } = use(params);
-  const escrow: Escrow = { ...MOCK_ESCROW, contractId: id };
+export default async function EscrowAdminPage({ params }: EscrowAdminPageProps) {
+  const { id } = await params;
+  const escrow: Escrow = {
+    ...MOCK_ESCROW,
+    contractId: id,
+    roles: {
+      ...MOCK_ESCROW.roles,
+      disputeResolver: process.env.DISPUTE_RESOLVER_ADDRESS ?? "",
+    },
+  };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col">
-      <EscrowAdminUpdateForm
-        escrow={escrow}
-        isAdmin={MOCK_IS_ADMIN}
-        onSubmit={(payload) => {
-          console.log("Escrow update submitted:", payload);
-        }}
-      />
-    </main>
+    <EscrowModeratorPage
+      escrow={escrow}
+      orderId={`order-${id}`}
+      network={process.env.TW_NETWORK === "mainnet" ? "mainnet" : "testnet"}
+    />
   );
 }

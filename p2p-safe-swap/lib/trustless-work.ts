@@ -114,6 +114,12 @@ export interface ResolveDisputeRequest {
   distributions: Array<{ address: string; amount: number }>;
 }
 
+export interface ResolveDisputeResponse {
+  unsignedTransaction?: string;
+  unsignedXdr?: string;
+  status?: string;
+}
+
 // ─── Queries ────────────────────────────────────────────────────────────────
 
 export interface GetEscrowsBySignerParams {
@@ -254,7 +260,7 @@ export const trustlessWork = {
       }),
 
     resolveDispute: (body: ResolveDisputeRequest) =>
-      request<{ unsignedTransaction?: string; status?: string }>(
+      request<ResolveDisputeResponse>(
         "/escrow/single-release/resolve-dispute",
         {
           method: "POST",
